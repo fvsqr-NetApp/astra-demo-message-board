@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<!--
+	Directive by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>NetApp Insight 2023 Demo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@waline/client@2.14.7/dist/waline.css">
+
+		 <!-- Custom Styles -->
+		 <style>
+			:root {
+		 /* Theme Color */
+  		--waline-theme-color: #1f5feb;
+  		--waline-active-color: #2a1de9;
+			}
+		  </style>
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header">
+				<!-- <span class="feature long content"> -->
+
+					 <img src="images/logo-latam-white.png" width="50%" height="50%"></img> 
+					
+					<!-- </span> -->
+					<br />
+				<h1>Welcome to the Insight Message Board</h1>
+				<p>Please share your comments below...</a>
+				<br />
+			</p>
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<header class="major container medium">
+	
+					<div id="waline"></div>
+					<script type="module">
+					  import { init } from 'https://cdn.jsdelivr.net/npm/@waline/client@2.14.7/dist/waline.mjs';
+					  // var host = window.location.hostname;
+					  init({
+						el: '#waline',
+						serverURL: 'http://' + window.location.hostname + '/waline/',
+						lang: 'en',
+						pageview: true,
+						pageSize: 100,
+						imageUploader: false,
+						search: false,
+						emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis@1.1.0/qq',],
+						requiredMeta: [],
+						meta: ['nick'],
+						login: "disable",
+					  });
+					</script>
+	
+
+				</header>
+
+
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+				<div class="container medium">
+
+					<header class="major last">
+						<h2></h2>
+					</header>
+
+
+				</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

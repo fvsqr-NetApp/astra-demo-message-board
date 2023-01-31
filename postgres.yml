@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: waline-init
+data:
+  waline_init.sql: |-
+    CREATE SEQUENCE wl_comment_seq;
+
+    CREATE TABLE wl_comment (
+      id int check (id > 0) NOT NULL DEFAULT NEXTVAL ('wl_comment_seq'),
+      user_id int DEFAULT NULL,
+      comment text,
+      insertedAt timestamp(0) without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      ip varchar(100) DEFAULT '',
+      link varchar(255) DEFAULT NULL,
+      mail varchar(255) DEFAULT NULL,
+      nick varchar(255) DEFAULT NULL,
+      pid int DEFAULT NULL,
+      rid int DEFAULT NULL,
+      sticky numeric DEFAULT NULL,
+      status varchar(50) NOT NULL DEFAULT '',
+      "like" int DEFAULT NULL,
+      ua text,
+      url varchar(255) DEFAULT NULL,
+      createdAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      updatedAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id)
+    ) ;
+
+
+    CREATE SEQUENCE wl_counter_seq;
+
+    CREATE TABLE wl_counter (
+      id int check (id > 0) NOT NULL DEFAULT NEXTVAL ('wl_counter_seq'),
+      time int DEFAULT NULL,
+      reaction0 int DEFAULT NULL,
+      reaction1 int DEFAULT NULL,
+      reaction2 int DEFAULT NULL,
+      reaction3 int DEFAULT NULL,
+      reaction4 int DEFAULT NULL,
+      reaction5 int DEFAULT NULL,
+      reaction6 int DEFAULT NULL,
+      reaction7 int DEFAULT NULL,
+      reaction8 int DEFAULT NULL,
+      url varchar(255) NOT NULL DEFAULT '',
+      createdAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      updatedAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id)
+    ) ;
+
+
+    CREATE SEQUENCE wl_users_seq;
+
+    CREATE TABLE wl_users (
+      id int check (id > 0) NOT NULL DEFAULT NEXTVAL ('wl_users_seq'),
+      display_name varchar(255) NOT NULL DEFAULT '',
+      email varchar(255) NOT NULL DEFAULT '',
+      password varchar(255) NOT NULL DEFAULT '',
+      type varchar(50) NOT NULL DEFAULT '',
+      label varchar(255) DEFAULT NULL,
+      url varchar(255) DEFAULT NULL,
+      avatar varchar(255) DEFAULT NULL,
+      github varchar(255) DEFAULT NULL,
+      twitter varchar(255) DEFAULT NULL,
+      facebook varchar(255) DEFAULT NULL,
+      google varchar(255) DEFAULT NULL,
+      weibo varchar(255) DEFAULT NULL,
+      qq varchar(255) DEFAULT NULL,
+      "2fa" varchar(32) DEFAULT NULL,
+      createdAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      updatedAt timestamp(0) without time zone NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id)
+    ) ;
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresdb
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  #storageClassName: block-store
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+    spec:
+      securityContext:
+        runAsUser: 26
+        runAsGroup: 26
+        fsGroup: 26
+      containers:
+        - name: postgres
+          image: quay.io/enterprisedb/postgresql:14.6
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432 
+              name: "postgres"
+          env:
+            - name: POSTGRES_DB
+              value: "postgresdb"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "demo123"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+            - name: waline-db-init
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: postgresdb
+        - name: waline-db-init
+          configMap:
+            name: waline-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  #type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: postgres
+  ports:
+  - name: postgres
+    port: 5432
+    protocol: TCP
+    targetPort: postgres

@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: confnginx
+data:
+  nginx.conf: |
+    user  www-data;
+    worker_processes  1;
+    error_log  /var/log/nginx/error.log warn;
+    pid        /var/run/nginx.pid;
+    events {
+        worker_connections  1024;
+    }
+    http {
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
+      log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+      access_log  /var/log/nginx/access.log  main;
+      sendfile        on;
+      keepalive_timeout  65;
+      server {
+        listen 80;
+
+        resolver kube-dns.kube-system.svc.cluster.local valid=5s;
+
+        location /healthz {
+          return 200;
+        }
+
+        location / {
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "Upgrade";
+          proxy_pass http://waline-frontend-web;
+          proxy_set_header Host $host;
+          proxy_http_version 1.1;
+        }
+
+        location /attack {
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "Upgrade";
+          proxy_pass http://waline-frontend-web;
+          proxy_set_header Host $host;
+          proxy_http_version 1.1;
+          proxy_set_header        Authorization ""; 
+          auth_basic              "For Hackers only";
+          auth_basic_user_file    /etc/nginx/htpasswd;
+        }
+
+        location /waline/ {
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "Upgrade";
+          proxy_pass http://waline:8360/;
+          proxy_set_header Host $host;
+          proxy_http_version 1.1;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header REMOTE-HOST $remote_addr;
+          add_header X-Cache $upstream_cache_status;
+          # cache
+          add_header Cache-Control no-cache;
+          expires 12h;
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: htpasswd
+data:
+  htpasswd: hack:$apr1$gc8p2kam$EtjVkmQmasuYrXJlp3BUO0  # hack:astra123
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: quay.io/jitesoft/nginx:stable
+          ports:
+          - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: htpasswd
+              mountPath: /etc/nginx/htpasswd
+              subPath: htpasswd
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: confnginx
+        - name: htpasswd
+          configMap:
+            name: htpasswd
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-custom
+spec:
+  type: LoadBalancer
+  #loadBalancerIP: 34.89.150.245
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    name: nginx

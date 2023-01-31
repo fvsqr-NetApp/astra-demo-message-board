@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waline-frontend
+  labels:
+    app.kubernetes.io/name: waline-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: waline-frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: waline-frontend
+    spec:
+      containers:
+      - name: waline-frontend
+        image: quay.io/hland-demo/astra/waline-frontend:insight2023.06
+        ports:
+        - containerPort: 3000
+          name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waline-frontend-web
+spec:
+  selector:
+    app.kubernetes.io/name: waline-frontend
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waline
+  labels:
+    app.kubernetes.io/name: waline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: waline
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: waline
+    spec:
+      containers:
+      - name: waline
+        image: quay.io/hland-demo/astra/waline:insight2023.01
+        env:
+        - name: SITE_URL
+          value: "http://127.0.0.1/waline"
+        - name: IPQPS
+          value: "3"
+        - name: JWT_TOKEN
+          value: "kjhlsjdhglkdjbf"
+        - name: PG_DB
+          value: "postgresdb"
+        - name: PG_USER
+          value: "postgres"
+        - name: PG_PASSWORD
+          value: "demo123"                             
+        - name: PG_HOST
+          value: "postgres"  
+        - name: PG_PORT
+          value: "5432"  
+        - name: AVATAR_PROXY
+          value: "false"
+        - name: GRAVATAR_STR
+          value: "https://seccdn.libravatar.org/avatar/{{nick|md5}}?d=robohash"
+        ports:
+        - containerPort: 8360
+          name: waline
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waline
+spec:
+  selector:
+    app.kubernetes.io/name: waline
+  ports:
+  - name: waline
+    protocol: TCP
+    port: 8360
+    targetPort: waline
