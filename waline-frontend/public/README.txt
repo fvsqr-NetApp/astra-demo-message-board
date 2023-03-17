@@ -1,11 +1,12 @@
-Directive by HTML5 UP
+Alpha by HTML5 UP
 html5up.net | @ajlkn
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 
 
-A simple single pager built around an angular motif (powered by SVG awesomeness).
-Should work great for a landing page. Also includes default styling for a bunch of
-standard page elements (uncomment the huge block of commented-out HTML to see it).
+A clean, super minimal responsive template geared towards startups, app devs, and other
+dedicated folks working tirelessly to launch their products. Includes a landing page,
+generic page, contact page, and a page with a whole mess of pre-styled elements (something
+new I'm trying out). Sass sources are also included.
 
 Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
 you can use for pretty much whatever.
@@ -30,4 +31,5 @@ Credits:
 
 	Other:
 		jQuery (jquery.com)
+		Scrollex (github.com/ajlkn/jquery.scrollex)
 		Responsive Tools (github.com/ajlkn/responsive-tools)

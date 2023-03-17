@@ -4,29 +4,20 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
-$( document ).ready(function() {
+(function($) {
 
 	var	$window = $(window),
 		$body = $('body'),
 		$header = $('#header'),
 		$banner = $('#banner');
 
-    // extra code for login modal (simulated ransomware attack)     
+    // extra code for login modal      
+	$('#loginModal').modal('show');
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip()
 	});
 
-	$("#login").click(function(){
-		var password = $("#password").val();
-		$.post("attack",{ password: password},
-		function(data) {
-			console.log('sent')
-			if(data=='attacked') {
-				$('#loginModal').modal('hide');
-				window.location.reload(true);
-			} 	
-		});
-	});
+
 
 	// Breakpoints.
 		breakpoints({
@@ -98,5 +89,16 @@ $( document ).ready(function() {
 
 		}
 
-});
+})(jQuery);
 
+$(document).ready(function(){
+	$("#login").click(function(){
+		var password = $("#password").val();
+		// Checking for blank fields.
+		//if( email =='' || password ==''){
+		//$('input[type="text"],input[type="password"]').css("border","2px solid red");
+		//$('input[type="text"],input[type="password"]').css("box-shadow","0 0 3px red");
+		console.log('test');
+		alert("Please fill all fields...!!!!!!");
+	});
+});

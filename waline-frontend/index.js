@@ -32,13 +32,26 @@ app.get('/test', (request, response) => {
     response.status(200).json('Just a test')
 })
 
+app.post('/submit', (request, response) => {
+    console.log('submit');
+    console.log(request.body.password);
+    if(request.body.password=='test') {
+        response.status(200).json('attacked')
+    } else 	{
+        response.status(401).json('unauthorized')
+    } 	
+
+})
+
 // Simulate ransomware attack
-app.get('/attack', async (request, response) => {
+app.post('/attack', async (request, response) => {
+    if(request.body.password==process.env.RANSOM_PASS) {
+
     const results = await query('SELECT * FROM wl_comment', []);
     //console.log(results);
     //console.log(results.length)
 
-    // Iterate over resuls
+    // Iterate over results
     for (i = 0; i < results.length; i++) {     
         // Update comment nickname fields in DB, obfuscate/'encrypt' characters by rotation in Unicode alphabet.
         // Rotating by a ranodm number as we don't want to decrypt anyway --> guarantees same input won't deliver same output
@@ -46,7 +59,11 @@ app.get('/attack', async (request, response) => {
     
     }
     // HTTP return
-    response.status(200).json('Y0U H4V3 B33N H4CK3D!!!')
+    response.status(200).json('attacked')
+
+    } else 	{
+        response.status(401).json('unauthorized')
+    }   
 })
 
 app.listen(port, () => {

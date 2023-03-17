@@ -1,92 +1,131 @@
 <!DOCTYPE HTML>
 <!--
-	Directive by HTML5 UP
+	Alpha by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
+
+
 <html>
 	<head>
-		<title>NetApp Insight 2023 Demo</title>
+		<title>Astra Message Board Demo</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!-- Load Bootstrap first as the login modal requires it but the remaining CSS shall override some aspects of the design -->
+		<link rel='stylesheet' href="assets/css/bootstrap.min.css"> 
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/login.css" />
+		<link rel="stylesheet" href="assets/css/waline.css" />
 
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@waline/client@2.14.7/dist/waline.css">
-
-		 <!-- Custom Styles -->
-		 <style>
-			:root {
+		<!-- Custom Styles for Waline -->
+		<style>
+		:root {
 		 /* Theme Color */
-  		--waline-theme-color: #1f5feb;
-  		--waline-active-color: #2a1de9;
-			}
-		  </style>
-
+		 --waline-theme-color: #ffb79e;
+		 --waline-active-color: #ffb79e;
+		}
+		</style>
 	</head>
-	<body class="is-preload">
+	<body class="landing is-preload">
+		<div id="page-wrapper">
 
-		<!-- Header -->
-			<div id="header">
-				<!-- <span class="feature long content"> -->
-
-					 <img src="images/logo-latam-white.png" width="50%" height="50%"></img> 
-					
-					<!-- </span> -->
-					<br />
-				<h1>Welcome to the Insight Message Board</h1>
-				<p>Please share your comments below...</a>
-				<br />
-			</p>
-			</div>
-
-		<!-- Main -->
-			<div id="main">
-
-				<header class="major container medium">
-	
-					<div id="waline"></div>
-					<script type="module">
-					  import { init } from 'https://cdn.jsdelivr.net/npm/@waline/client@2.14.7/dist/waline.mjs';
-					  // var host = window.location.hostname;
-					  init({
-						el: '#waline',
-						serverURL: 'http://' + window.location.hostname + '/waline/',
-						lang: 'en',
-						pageview: true,
-						pageSize: 100,
-						imageUploader: false,
-						search: false,
-						emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis@1.1.0/qq',],
-						requiredMeta: [],
-						meta: ['nick'],
-						login: "disable",
-					  });
-					</script>
-	
-
+			<!-- Header -->
+				<header id="header" class="alt">
+					<h1><a href="https://bluexp.netapp.com/astra">Astra</a> Kubernetes Data Management</h1>
+					<nav id="nav">
+						<ul>
+							<li>
+								
+									<button type="button" class="button alt small" data-toggle="modal" data-target="#loginModal">
+									  Ransomware Attack
+									</button>  
+								  </li>
+						</ul>
+					</nav>
 				</header>
 
+			<!-- Banner -->
+				<section id="banner">
+					<h2>Astra Message Board</h2>
+					<p>Please share your comments below...</p>
+				</br>
+				</br>
+				</section>
 
-			</div>
+			<!-- Main -->
+				<section id="main" class="container">
 
-		<!-- Footer -->
-			<div id="footer">
-				<div class="container medium">
+					<section class="box special">
 
-					<header class="major last">
-						<h2></h2>
-					</header>
+						<div id="waline"></div>
+					    <script type="module">
+					    	import { init } from './assets/js/waline.mjs';
+					      	// var host = window.location.hostname;
+					  	  	init({
+						    	el: '#waline',
+								serverURL: 'http://' + window.location.hostname + '/waline/',
+								lang: 'en',
+								pageview: true,
+								pageSize: 100,
+								imageUploader: false,
+								search: false,
+								emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis@1.1.0/qq',],
+								requiredMeta: [],
+								meta: ['nick'],
+								login: "disable",
+					  		});
+					</script>
+					</div>
+
+					</section>
+				</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="copyright">
+						<li>Astra Message Board demo app by <a href="https://www.linkedin.com/in/hendrik-land/">Hendrik Land</a></li><li>Design: Alpha by <a href="http://html5up.net">HTML5 UP</a></li><li>Technology: <a href="https://nodejs.org">Node.js</a>, <a href="https://expressjs.com/">Express</a>, <a href="https://waline.js.org/en/">Waline</a>, <a href="https://www.nginx.com/">Nnginx</a>, <a href="https://www.postgresql.org/">Postgres</a> </li>
+					</ul>
+				</footer>
+
+		</div>
 
 
+<!-- Login modal for the ransomware attack button -->
+		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+			  <div class="modal-content">
+				<div class="modal-header border-bottom-0">
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				  </button>
 				</div>
-			</div>
+				<div class="modal-body">
+				  <div class="form-title text-center">
+					<h3>Only for real H4X0R</h3>
+				  </div>
+				  <div class="d-flex flex-column text-center">
+					<form method="post" action="#">
+					  <div class="form-group">
+							<input type="password" id="password" placeholder="You shall not pass...">
+					  </div>
+					  <input type="button" name="login" id="login" class="button special" value="Attack me">
+					</form>
+				</div>
+		  </div>
+	
+
+
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+		  	<!-- Bootstrap JS & Popper -->
+		  	<script src='assets/js/bootstrap.bundle.min.js'></script> 
 
 	</body>
 </html>
