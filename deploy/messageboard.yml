@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: messageboard-frontend
-        image: quay.io/hland-demo/astra/messageboard-frontend:2
+        image: quay.io/hland-demo/astra/waline-frontend:2
         ports:
         - containerPort: 3000
           name: web
