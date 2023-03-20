@@ -9,22 +9,22 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: waline-frontend
+  name: messageboard-frontend
   labels:
-    app.kubernetes.io/name: waline-frontend
+    app.kubernetes.io/name: messageboard-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: waline-frontend
+      app.kubernetes.io/name: messageboard-frontend
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: waline-frontend
+        app.kubernetes.io/name: messageboard-frontend
     spec:
       containers:
-      - name: waline-frontend
-        image: quay.io/hland-demo/astra/waline-frontend:2
+      - name: messageboard-frontend
+        image: quay.io/hland-demo/astra/messageboard-frontend:2
         ports:
         - containerPort: 3000
           name: web
@@ -38,10 +38,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: waline-frontend-web
+  name: messageboard-frontend-web
 spec:
   selector:
-    app.kubernetes.io/name: waline-frontend
+    app.kubernetes.io/name: messageboard-frontend
   ports:
   - name: http
     protocol: TCP
