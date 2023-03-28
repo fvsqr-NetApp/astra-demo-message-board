@@ -60,10 +60,16 @@
 						<div id="waline"></div>
 					    <script type="module">
 					    	import { init } from './assets/js/waline.mjs';
-					      	// var host = window.location.hostname;
+							var protocol = window.location.protocol;
+					      	var host = window.location.hostname;
+							var port = window.location.port;
+
+							if (host) {
+								host = host + ":" + port;
+							}
 					  	  	init({
 						    	el: '#waline',
-								serverURL: 'http://' + window.location.hostname + '/waline/',
+								serverURL: protocol + '//' + host + '/waline/',
 								lang: 'en',
 								pageview: true,
 								pageSize: 100,
